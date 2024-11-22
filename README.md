@@ -30,7 +30,15 @@
     </section>
 
     <!-- Section Recherche -->
-    <section id="search">
+  #searchLogo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#searchLogo img {
+    max-width: 100%;
+    height: auto;
+}  <section id="search">
         <h2>Effectuer une recherche</h2>
         <form id="searchForm" aria-labelledby="search-form">
             <label for="query">Votre recherche :</label>
@@ -84,14 +92,5 @@
         // Simulation de mise à jour automatique des algorithmes
         setInterval(updateAlgorithms, 60000); // Met à jour toutes les 60 secondes
     </script>
-#searchLogo {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#searchLogo img {
-    max-width: 100%;
-    height: auto;
-}
 </body>
 </html>
