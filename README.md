@@ -84,5 +84,14 @@
         // Simulation de mise à jour automatique des algorithmes
         setInterval(updateAlgorithms, 60000); // Met à jour toutes les 60 secondes
     </script>
+#searchLogo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#searchLogo img {
+    max-width: 100%;
+    height: auto;
+}
 </body>
 </html>
