@@ -60,17 +60,5 @@
             <button type="submit" aria-label="Soumettre la recherche">Rechercher</button>
         </div>
     </form>
-
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            let query = document.getElementById('query').value;
-            if (query.trim() !== "") {
-                alert(`Résultats pour : ${query}`);
-            } else {
-                alert("Veuillez entrer un terme de recherche.");
-            }
-        });
-    </script>
 </body>
 </html>
