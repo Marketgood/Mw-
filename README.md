@@ -1,3 +1,4 @@
+![unnamed](https://github.com/user-attachments/assets/ea719511-7777-4e41-9813-494d22619c20)
 <!doctype html>
 <html lang="fr">
   <html lang="en">
@@ -17,7 +18,7 @@
     {% if results %}
         <h2>Results:</h2>
         <ul>
-        {% for url, content in results %}
+ 
             <li><a href="{{ url }}">{{ url }}</a></li>
         {% endfor %}
         </ul>
