@@ -41,6 +41,8 @@
             <h2>Connexion et Inscription</h2>
             <p>Les utilisateurs peuvent créer un compte et se connecter pour accéder à des fonctionnalités exclusives.</p>
             <a href="register.html">Créer un compte</a> | <a href="login.html">Se connecter</a>
+            <p>Ou inscrivez-vous avec Gmail :</p>
+            <a href="auth/google" class="btn-gmail">S'inscrire avec Gmail</a>
         </section>
         
         <section>
