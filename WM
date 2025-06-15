@@ -1,87 +1,203 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="WM (Web Market) - Une plateforme interactive de recherche">
-    <meta name="keywords" content="Web Market, Recherche, Algorithmes">
-    <meta name="author" content="WM Team">
-    <title>WM - Web Market</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- Entête du site -->
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#home">Accueil</a></li>
-                <li><a href="#search">Recherche</a></li>
-                <li><a href="#about">À propos</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+// Nummo - SCPI Liquid Marketplace with Property Listings, Commission System, and Dark Mode
 
-    <!-- Section d'accueil -->
-    <section id="home">
-        <h1>Bienvenue sur WM (Web Market)</h1>
-        <p>Une plateforme où vous pouvez effectuer des recherches et interagir avec différents algorithmes.</p>
-    </section>
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
-    <!-- Section Recherche -->
-    <section id="search">
-        <h2>Effectuer une recherche</h2>
-        <form id="searchForm" aria-labelledby="search-form">
-            <label for="query">Votre recherche :</label>
-            <input type="text" id="query" name="query" placeholder="Rechercher un produit, service ou information..." required aria-label="Entrez votre recherche">
-            <button type="submit" aria-label="Soumettre la recherche">Rechercher</button>
-        </form>
-        <div id="searchResults" aria-live="polite">
-            <!-- Les résultats de recherche apparaîtront ici -->
+export default function NummoApp() {
+  const [partPrice, setPartPrice] = useState(1049.6);
+  const [userParts, setUserParts] = useState(5);
+  const [monthlyRentTotal] = useState(580.34);
+  const [marketOffers, setMarketOffers] = useState([
+    { id: 1, percent: 2, pricePerPercent: 1000 },
+    { id: 2, percent: 1, pricePerPercent: 1080 },
+    { id: 3, percent: 3, pricePerPercent: 1050 },
+  ]);
+
+  const [newOfferPercent, setNewOfferPercent] = useState(1);
+  const [newOfferPrice, setNewOfferPrice] = useState(1050);
+  const [propertyListings, setPropertyListings] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const [newProperty, setNewProperty] = useState({
+    name: "",
+    address: "",
+    photoUrl: "",
+    commissionPaid: false,
+  });
+
+  const property = {
+    name: "Résidence Palmier",
+    address: "42 Avenue du Parc, 75016 Paris, France",
+    photos: [
+      "https://via.placeholder.com/300x200?text=Photo+1",
+      "https://via.placeholder.com/300x200?text=Photo+2",
+      "https://via.placeholder.com/300x200?text=Photo+3",
+    ],
+  };
+
+  const handleAddOffer = () => {
+    setMarketOffers([
+      ...marketOffers,
+      {
+        id: marketOffers.length + 1,
+        percent: newOfferPercent,
+        pricePerPercent: newOfferPrice,
+      },
+    ]);
+  };
+
+  const handlePurchase = (offer) => {
+    const totalCost = offer.percent * offer.pricePerPercent;
+    alert(`Paiement Stripe simulé : ${totalCost} € pour ${offer.percent}%`);
+    setUserParts(userParts + offer.percent);
+    setMarketOffers(marketOffers.filter((o) => o.id !== offer.id));
+  };
+
+  const handleAddProperty = () => {
+    if (!newProperty.name || !newProperty.address) {
+      alert("Veuillez remplir les champs obligatoires.");
+      return;
+    }
+    const confirmed = window.confirm("Confirmez le paiement de la commission pour publier ce bien ?");
+    if (!confirmed) return;
+    setPropertyListings([...propertyListings, { ...newProperty, commissionPaid: true }]);
+    setNewProperty({ name: "", address: "", photoUrl: "", commissionPaid: false });
+  };
+
+  const rentIncome = ((userParts / 100) * (monthlyRentTotal * 0.55)).toFixed(2);
+
+  return (
+    <div className={`p-6 max-w-5xl mx-auto ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Nummo - SCPI Marché Secondaire</h1>
+        <div className="flex items-center gap-2">
+          <span>Mode nuit</span>
+          <Switch checked={darkMode} onCheckedChange={setDarkMode} />
         </div>
-    </section>
+      </div>
 
-    <!-- Section À propos -->
-    <section id="about">
-        <h2>À propos de WM</h2>
-        <p>WM est une plateforme dynamique où les utilisateurs peuvent rechercher et interagir avec des données fournies par des algorithmes avancés. Le détenteur du site peut aussi mettre à jour les algorithmes pour répondre aux besoins évolutifs des utilisateurs.</p>
-    </section>
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Mes investissements</h2>
+          <p>Parts détenues : {userParts}%</p>
+          <p>Loyer mensuel estimé : {rentIncome} €</p>
+          <p>Prix estimé par part (1%) : {partPrice.toFixed(2)} €</p>
+        </CardContent>
+      </Card>
 
-    <!-- Section Contact -->
-    <section id="contact">
-        <h2>Contactez-nous</h2>
-        <p>Pour plus d'informations, vous pouvez nous contacter par email à <a href="mailto:contact@webmarket.com">contact@webmarket.com</a>.</p>
-    </section>
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Mettre en vente</h2>
+          <div className="flex gap-2 mb-2">
+            <Input
+              type="number"
+              placeholder="% à vendre"
+              value={newOfferPercent}
+              onChange={(e) => setNewOfferPercent(parseFloat(e.target.value))}
+            />
+            <Input
+              type="number"
+              placeholder="Prix par % (€)"
+              value={newOfferPrice}
+              onChange={(e) => setNewOfferPrice(parseFloat(e.target.value))}
+            />
+            <Button onClick={handleAddOffer}>Ajouter</Button>
+          </div>
+        </CardContent>
+      </Card>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 WM - Web Market. Tous droits réservés.</p>
-    </footer>
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Détails du bien immobilier</h2>
+          <p className="mb-2 font-medium">{property.name}</p>
+          <p className="mb-4 text-sm">Adresse : {property.address}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {property.photos && property.photos.length > 0 ? (
+              property.photos.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Photo ${index + 1}`}
+                  className="rounded shadow"
+                />
+              ))
+            ) : (
+              <p>Photos non disponibles</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-    <!-- Script pour gérer la recherche -->
-    <script>
-        document.getElementById('searchForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            let query = document.getElementById('query').value;
-            // Simuler une recherche (le code ici devra être adapté pour une vraie recherche avec des algorithmes)
-            if(query.trim() !== "") {
-                document.getElementById('searchResults').innerHTML = `<p>Résultats pour : <strong>${query}</strong></p>`;
-            } else {
-                document.getElementById('searchResults').innerHTML = "<p>Aucun résultat trouvé. Veuillez entrer un terme de recherche.</p>";
-            }
-        });
-    </script>
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Mettre en ligne un bien immobilier</h2>
+          <div className="grid grid-cols-3 gap-2 mb-2">
+            <Input
+              placeholder="Nom du bien"
+              value={newProperty.name}
+              onChange={(e) => setNewProperty({ ...newProperty, name: e.target.value })}
+            />
+            <Input
+              placeholder="Adresse"
+              value={newProperty.address}
+              onChange={(e) => setNewProperty({ ...newProperty, address: e.target.value })}
+            />
+            <Input
+              placeholder="URL de la photo"
+              value={newProperty.photoUrl}
+              onChange={(e) => setNewProperty({ ...newProperty, photoUrl: e.target.value })}
+            />
+          </div>
+          <Button onClick={handleAddProperty}>Publier avec commission</Button>
+        </CardContent>
+      </Card>
 
-    <!-- Possibilité d'ajouter d'autres algorithmes ici -->
-    <script>
-        // Exemple d'intégration d'algorithmes supplémentaires
-        function updateAlgorithms() {
-            console.log("Algorithmes mis à jour.");
-            // Code pour mettre à jour les algorithmes de la plateforme
-        }
+      <Card className="mb-4">
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Biens publiés par les utilisateurs</h2>
+          {propertyListings.length === 0 ? (
+            <p>Aucun bien publié pour le moment.</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              {propertyListings.map((item, index) => (
+                <div key={index} className="border rounded p-2">
+                  <h3 className="font-bold text-lg">{item.name}</h3>
+                  <p className="text-sm mb-1">{item.address}</p>
+                  {item.photoUrl ? (
+                    <img
+                      src={item.photoUrl}
+                      alt={`Photo ${index}`}
+                      className="rounded w-full"
+                    />
+                  ) : (
+                    <p className="italic text-sm">Photo non disponible</p>
+                  )}
+                </div>
+              ))
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-        // Simulation de mise à jour automatique des algorithmes
-        setInterval(updateAlgorithms, 60000); // Met à jour toutes les 60 secondes
-    </script>
-</body>
-</html>
+      <Card>
+        <CardContent className="p-4">
+          <h2 className="text-xl font-semibold mb-2">Parts en vente</h2>
+          <ul className="space-y-2">
+            {marketOffers.map((offer) => (
+              <li
+                key={offer.id}
+                className="border rounded p-2 flex justify-between items-center"
+              >
+                <span>{offer.percent}% @ {offer.pricePerPercent} €/%</span>
+                <Button size="sm" onClick={() => handlePurchase(offer)}>Acheter</Button>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
